@@ -28,9 +28,17 @@ class Input:
         else:
             self.set_state(Direction.x, 0)
 
+    def move_keys(self, event):
+        if event.key == 275:
+            self.set_state(Direction.x, 1 if event.type == pygame.KEYDOWN else 0)
+        if event.key == 276:
+            self.set_state(Direction.x, -1 if event.type == pygame.KEYDOWN else 0)
+
     def event(self, event):
         if event.type == pygame.JOYAXISMOTION and event.axis == 0:
             self.move_axis0(event.value)
+        if event.type == pygame.KEYDOWN or event.type == pygame.KEYUP:
+            self.move_keys(event)
 
     def test(self, x=False):
         if x:
