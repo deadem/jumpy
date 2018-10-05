@@ -17,6 +17,7 @@ class State:
 	x = 0
 	y = 0
 	ticks = 0
+	lastY = 0
 
 	def updateX(self, value):
 		if abs(value) < 0.3:
@@ -27,9 +28,15 @@ class State:
 			self.x = -1
 
 	def updateY(self):
-		ticks = pygame.time.get_ticks() / 500
-		self.y = (9.8 * (self.ticks - ticks) ** 2) / 2
+		ticks = pygame.time.get_ticks() / 100
+		self.y = self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4
+		if self.y > 20:
+			self.y = 20
 		# self.ticks = ticks
+
+	def jump(self):
+		self.lastY = -20
+		self.ticks = pygame.time.get_ticks() / 100
 
 state = State()
 coordinates = { 'x': 400, 'y': 0 }
@@ -45,6 +52,9 @@ while not quit:
 				state.updateX(event.value)
 			# if event.axis == 1:
 			# 	coordinates['y'] = coordinates['y'] + event.value * 10
+
+	if coordinates['y'] > 550:
+		state.jump()
 
 	state.updateY()
 
