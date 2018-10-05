@@ -28,14 +28,14 @@ class State:
         return int(self.x / (32 * 4)) * (32 * 4) + (32 * 2) - 32 / 2
 
     def updateX(self):
-        if not self.targetX == self.x:
+        if self.targetX and not self.targetX == self.x:
             self.x = self.x + math.copysign(1, self.targetX - self.x) * 8
 
     def moveX(self, value):
-        if self.y > 0 or abs(value) < 0.3 or not (self.targetX == self.x):
-            # self.x = 0
-            pass
-        elif value > 0.5:
+        if self.y > 0 or not self.targetX == 0:
+            return
+
+        if value > 0.5:
             self.targetX = self.center() + 32 * 4
         elif value < -0.5:
             self.targetX = self.center() - 32 * 4
@@ -48,6 +48,7 @@ class State:
         self.lastY = min(-self.y / 2, -20)
         self.maxY = 20
         self.ticks = pygame.time.get_ticks() / 100
+        self.targetX = 0
 
     def power(self):
         if self.y < 0:
@@ -79,8 +80,7 @@ while not quit:
         if event.type == pygame.JOYBUTTONDOWN:
             state.power()
 
-    if userInput.test(x=True):
-        state.moveX(userInput.test(x=True))
+    state.moveX(userInput.test(x=True))
 
     x = coordinates['x']
     y = coordinates['y']
