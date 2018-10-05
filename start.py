@@ -1,5 +1,6 @@
-import pygame
+from input import Input
 import math
+import pygame
 
 pygame.init()
 
@@ -11,9 +12,8 @@ clock = pygame.time.Clock()
 
 bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
 platformImage = pygame.image.load('resources/img/platform-32.png')
+userInput = Input()
 
-joystick = pygame.joystick.Joystick(0)
-joystick.init()
 
 class State:
     x = 0
@@ -67,14 +67,20 @@ while not quit:
         quit = quit | event.type == pygame.QUIT
         print(event)
 
-        if event.type == pygame.JOYAXISMOTION:
-            if event.axis == 0:
-                state.moveX(event.value)
-            # if event.axis == 1:
-            #     coordinates['y'] = coordinates['y'] + event.value * 10
+        userInput.event(event)
+
+
+        # if event.type == pygame.JOYAXISMOTION:
+        #     if event.axis == 0:
+        #         state.moveX(event.value)
+        #     # if event.axis == 1:
+        #     #     coordinates['y'] = coordinates['y'] + event.value * 10
 
         if event.type == pygame.JOYBUTTONDOWN:
             state.power()
+
+    if userInput.test(x=True):
+        state.moveX(userInput.test(x=True))
 
     x = coordinates['x']
     y = coordinates['y']
