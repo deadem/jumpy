@@ -15,6 +15,8 @@ joystick.init()
 
 class State:
 	x = 0
+	y = 0
+	ticks = 0
 
 	def updateX(self, value):
 		if abs(value) < 0.3:
@@ -23,6 +25,11 @@ class State:
 			self.x = 1
 		elif value < -0.5:
 			self.x = -1
+
+	def updateY(self):
+		ticks = pygame.time.get_ticks() / 500
+		self.y = (9.8 * (self.ticks - ticks) ** 2) / 2
+		# self.ticks = ticks
 
 state = State()
 coordinates = { 'x': 400, 'y': 0 }
@@ -39,7 +46,11 @@ while not quit:
 			# if event.axis == 1:
 			# 	coordinates['y'] = coordinates['y'] + event.value * 10
 
+	state.updateY()
+
 	coordinates['x'] = coordinates['x'] + state.x * 10
+	coordinates['y'] = coordinates['y'] + state.y
+
 	display.fill((0, 0, 0))
 	display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
 
