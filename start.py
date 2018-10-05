@@ -12,4 +12,8 @@ while not quit:
 	for event in pygame.event.get():
 		quit = quit | event.type == pygame.QUIT
 		print(event)
-		
+
+	pygame.display.update()
+	clock.tick(60) # FPS
+
+pygame.quit()
