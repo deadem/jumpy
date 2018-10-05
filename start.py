@@ -1,4 +1,5 @@
 import pygame
+import math
 
 pygame.init()
 
@@ -19,14 +20,24 @@ class State:
     y = 0
     ticks = 0
     lastY = 0
+    lastX = 0
+    targetX = 0
 
-    def updateX(self, value):
-        if abs(value) < 0.3:
-            self.x = 0
+    def center(self):
+        return int(self.x / (32 * 4)) * (32 * 4) + (32 * 2) - 32 / 2
+
+    def updateX(self):
+        if not self.targetX == self.x:
+            self.x = self.x + math.copysign(1, self.targetX - self.x) * 8
+
+    def moveX(self, value):
+        if self.y > 0 or abs(value) < 0.3 or not (self.targetX == self.x):
+            # self.x = 0
+            pass
         elif value > 0.5:
-            self.x = 1
+            self.targetX = self.center() + 32 * 4
         elif value < -0.5:
-            self.x = -1
+            self.targetX = self.center() - 32 * 4
 
     def updateY(self):
         ticks = pygame.time.get_ticks() / 100
@@ -40,7 +51,7 @@ class State:
         self.ticks = pygame.time.get_ticks() / 100
 
 state = State()
-coordinates = { 'x': 400, 'y': 0 }
+coordinates = { 'x': 0, 'y': 0 }
 
 quit = False
 while not quit:
@@ -50,7 +61,7 @@ while not quit:
 
         if event.type == pygame.JOYAXISMOTION:
             if event.axis == 0:
-                state.updateX(event.value)
+                state.moveX(event.value)
             # if event.axis == 1:
             #     coordinates['y'] = coordinates['y'] + event.value * 10
 
@@ -64,8 +75,9 @@ while not quit:
         state.jump()
 
     state.updateY()
+    state.updateX()
 
-    coordinates['x'] = x + state.x * 10
+    coordinates['x'] = state.x
     coordinates['y'] = min(535, y + state.y)
 
     display.fill((0, 0, 0))
