@@ -22,6 +22,7 @@ class State:
     lastY = 0
     lastX = 0
     targetX = 0
+    maxY = 20
 
     def center(self):
         return int(self.x / (32 * 4)) * (32 * 4) + (32 * 2) - 32 / 2
@@ -41,17 +42,24 @@ class State:
 
     def updateY(self):
         ticks = pygame.time.get_ticks() / 100
-        self.y = self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4
-        if self.y > 20:
-            self.y = 20
-        # self.ticks = ticks
+        self.y = min(self.maxY, self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4)
 
     def jump(self):
-        self.lastY = -20
+        self.lastY = min(-self.y / 2, -20)
+        self.maxY = 20
         self.ticks = pygame.time.get_ticks() / 100
+
+    def power(self):
+        if self.y < 0:
+            return
+        self.lastY = min(20, self.lastY)
+        self.maxY = 80
+
 
 state = State()
 coordinates = { 'x': 0, 'y': 0 }
+
+p = 0
 
 quit = False
 while not quit:
@@ -65,13 +73,16 @@ while not quit:
             # if event.axis == 1:
             #     coordinates['y'] = coordinates['y'] + event.value * 10
 
+        if event.type == pygame.JOYBUTTONDOWN:
+            state.power()
+
     x = coordinates['x']
     y = coordinates['y']
 
     if y > 534:
         state.jump()
 
-    if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 4) and (state.y > 0):
+    if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 3) and (state.y > 0):
         state.jump()
 
     state.updateY()
