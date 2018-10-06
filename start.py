@@ -1,5 +1,6 @@
 from input import Input
 from platform import Platform
+from manager import Manager
 import math
 import pygame
 
@@ -54,8 +55,15 @@ class State:
 state = State()
 coordinates = { 'x': 0, 'y': 0 }
 
-platform1 = Platform(display, 0, 568)
-platform2 = Platform(display, 32 * 4, 568 - 32 * 4)
+manager = Manager(display)
+manager.add_platform(0, 568)
+manager.add_platform(32 * 4, 568 - 32 * 4)
+manager.add_platform(32 * 4 * 2, 568 - 32 * 4 * 2)
+manager.add_platform(32 * 4 * 3, 568 - 32 * 4 * 3)
+
+# platform1 = Platform(display, 0, 568)
+# platform2 = Platform(display, 32 * 4, 568 - 32 * 4)
+# platform3 = Platform(display, 32 * 4 * 2, 568 - 32 * 4 * 2)
 
 p = 0
 
@@ -74,31 +82,40 @@ while not quit:
         #     # if event.axis == 1:
         #     #     coordinates['y'] = coordinates['y'] + event.value * 10
 
-        if event.type == pygame.JOYBUTTONDOWN:
-            state.power()
+        # if event.type == pygame.JOYBUTTONDOWN:
+        #     state.power()
 
     state.moveX(userInput.test(x=True))
 
     x = coordinates['x']
     y = coordinates['y']
 
-    if y > 534:
+    if y >= 600:
+        # if x >= 0 and x <= 32 * 4:
+        #     platform1.shake()
         state.jump()
 
-    if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 3) and (state.y > 0):
-        state.jump()
+    # if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 3) and (state.y > 0):
+    #     # platform2.shake()
+    #     state.jump()
 
     state.updateY()
     state.updateX()
 
     coordinates['x'] = state.x
-    coordinates['y'] = min(535, y + state.y)
+    coordinates['y'] = min(600, y + state.y)
 
     display.fill((0, 0, 0))
+
+    if manager.hit_test(coordinates['x'], coordinates['y'], state.y > 0):
+        state.jump()
+    manager.draw()
+
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
 
-    platform1.draw()
-    platform2.draw()
+    # platform1.draw()
+    # platform2.draw()
+    # platform3.draw()
 
     pygame.display.update()
     clock.tick(60) # FPS
