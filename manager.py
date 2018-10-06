@@ -5,6 +5,10 @@ class Manager:
         self.platforms = []
         self.display = display
 
+    def move_view(self, offset):
+        for platform in self.platforms:
+            platform.y = platform.y + offset
+
     def add_platform(self, x, y):
         self.platforms.append(Platform(self.display, x, y))
 

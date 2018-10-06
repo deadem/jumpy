@@ -3,6 +3,7 @@ from platform import Platform
 from manager import Manager
 import math
 import pygame
+import random
 
 pygame.init()
 
@@ -56,10 +57,14 @@ state = State()
 coordinates = { 'x': 0, 'y': 0 }
 
 manager = Manager(display)
-manager.add_platform(0, 568)
-manager.add_platform(32 * 4, 568 - 32 * 4)
-manager.add_platform(32 * 4 * 2, 568 - 32 * 4 * 2)
-manager.add_platform(32 * 4 * 3, 568 - 32 * 4 * 3)
+
+i = 0
+for m in range(0, 100):
+    manager.add_platform(32 * 4 * i, 568 - 32 * 4 * 1.5 * m)
+    if i > 0 and random.random() > 0.5 ** i:
+        i = i - 1
+    elif i < 5:
+        i = i + 1
 
 # platform1 = Platform(display, 0, 568)
 # platform2 = Platform(display, 32 * 4, 568 - 32 * 4)
@@ -106,6 +111,12 @@ while not quit:
     coordinates['y'] = min(600, y + state.y)
 
     display.fill((0, 0, 0))
+
+    top = 100
+    offset = top - coordinates['y']
+    if offset > 0:
+        coordinates['y'] = top
+        manager.move_view(offset)
 
     if manager.hit_test(coordinates['x'], coordinates['y'], state.y > 0):
         state.jump()
