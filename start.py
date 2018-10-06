@@ -1,4 +1,5 @@
 from input import Input
+from platform import Platform
 import math
 import pygame
 
@@ -11,7 +12,6 @@ pygame.display.set_caption('Bumpy')
 clock = pygame.time.Clock()
 
 bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
-platformImage = pygame.image.load('resources/img/platform-32.png')
 userInput = Input()
 
 
@@ -54,6 +54,9 @@ class State:
 state = State()
 coordinates = { 'x': 0, 'y': 0 }
 
+platform1 = Platform(display, 0, 568)
+platform2 = Platform(display, 32 * 4, 568 - 32 * 4)
+
 p = 0
 
 quit = False
@@ -94,9 +97,8 @@ while not quit:
     display.fill((0, 0, 0))
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
 
-    display.blit(platformImage, (0, 568))
-
-    display.blit(platformImage, (32 * 4, 568 - 32 * 4))
+    platform1.draw()
+    platform2.draw()
 
     pygame.display.update()
     clock.tick(60) # FPS
