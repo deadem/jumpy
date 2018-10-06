@@ -32,13 +32,7 @@ class State:
             self.x = self.x + math.copysign(1, self.targetX - self.x) * 8
 
     def moveX(self, value):
-        if self.y > 0 or not self.targetX == 0:
-            return
-
-        if value > 0.5:
-            self.targetX = self.center() + 32 * 4
-        elif value < -0.5:
-            self.targetX = self.center() - 32 * 4
+        self.x = self.x + value * 10
 
     def updateY(self):
         ticks = pygame.time.get_ticks() / 100
