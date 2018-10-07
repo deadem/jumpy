@@ -2,6 +2,7 @@ from input import Input
 from platform import Platform, Vanish, Moving
 from monster import Monster
 from manager import Manager
+from player import Player
 import math
 import pygame
 import random
@@ -23,47 +24,7 @@ backgroundImage = pygame.image.load('resources/img/background.jpg')
 userInput = Input()
 
 
-class State:
-    x = 0
-    y = 0
-    ticks = 0
-    lastY = 0
-    lastX = 0
-    targetX = 0
-    maxY = 20
-
-    def center(self):
-        return int(self.x / (32 * 4)) * (32 * 4) + (32 * 2) - 32 / 2
-
-    def updateX(self):
-        if self.targetX and not self.targetX == self.x:
-            self.x = self.x + math.copysign(1, self.targetX - self.x) * 8
-
-    def moveX(self, value):
-        self.x = self.x + value * 10
-
-    def updateY(self):
-        ticks = pygame.time.get_ticks() / 100
-        self.y = min(self.maxY, self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4)
-
-    def jump(self):
-        self.lastY = min(-self.y / 2, -25)
-        self.maxY = 25
-        self.ticks = pygame.time.get_ticks() / 100
-        self.targetX = 0
-
-    def power(self):
-        if self.y < 0:
-            return
-        self.lastY = min(20, self.lastY)
-        self.maxY = 80
-
-
-state = State()
-coordinates = { 'x': 0, 'y': 0 }
-
 manager = Manager(display)
-
 i = 0
 lastVanish = False
 for m in range(0, 200):
@@ -90,9 +51,8 @@ for m in range(0, 200):
     elif i < 5:
         i = i + 1
 
-# platform1 = Platform(display, 0, 568)
-# platform2 = Platform(display, 32 * 4, 568 - 32 * 4)
-# platform3 = Platform(display, 32 * 4 * 2, 568 - 32 * 4 * 2)
+player = Player()
+coordinates = { 'x': 0, 'y': 0 }
 
 p = 0
 topOffset = 0
@@ -105,17 +65,7 @@ while True:
 
         userInput.event(event)
 
-
-        # if event.type == pygame.JOYAXISMOTION:
-        #     if event.axis == 0:
-        #         state.moveX(event.value)
-        #     # if event.axis == 1:
-        #     #     coordinates['y'] = coordinates['y'] + event.value * 10
-
-        # if event.type == pygame.JOYBUTTONDOWN:
-        #     state.power()
-
-    state.moveX(userInput.test(x=True))
+    player.move_x(userInput.test(x=True))
 
     x = coordinates['x']
     y = coordinates['y']
@@ -123,22 +73,15 @@ while True:
     if y >= resolution['height'] - 64:
         offset = -40
         if topOffset <= -offset:
-            state.jump()
+            player.jump()
         else:
             topOffset = topOffset + offset
             manager.move_view(offset)
-        # if x >= 0 and x <= 32 * 4:
-        #     platform1.shake()
 
-    # if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 3) and (state.y > 0):
-    #     # platform2.shake()
-    #     state.jump()
+    player.tick()
 
-    state.updateY()
-    state.updateX()
-
-    coordinates['x'] = state.x
-    coordinates['y'] = min(resolution['height'], y + state.y)
+    coordinates['x'] = player.x
+    coordinates['y'] = min(resolution['height'], y + player.y)
 
     display.fill((0, 0, 0))
     display.blit(backgroundImage, (0, 0))
@@ -150,15 +93,11 @@ while True:
         manager.move_view(offset)
         topOffset = topOffset + offset
 
-    if manager.hit_test(coordinates['x'], coordinates['y'], state.y > 0):
-        state.jump()
+    if manager.hit_test(coordinates['x'], coordinates['y'], player.y > 0):
+        player.jump()
     manager.draw()
 
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
-
-    # platform1.draw()
-    # platform2.draw()
-    # platform3.draw()
 
     pygame.display.update()
     clock.tick(60) # FPS
