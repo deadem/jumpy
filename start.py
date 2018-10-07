@@ -87,7 +87,7 @@ for m in range(0, 100):
 # platform3 = Platform(display, 32 * 4 * 2, 568 - 32 * 4 * 2)
 
 p = 0
-
+topOffset = 0
 while True:
     for event in pygame.event.get():
         print(event)
@@ -112,10 +112,15 @@ while True:
     x = coordinates['x']
     y = coordinates['y']
 
-    if y >= resolution['height']:
+    if y >= resolution['height'] - 64:
+        offset = -40
+        if topOffset <= -offset:
+            state.jump()
+        else:
+            topOffset = topOffset + offset
+            manager.move_view(offset)
         # if x >= 0 and x <= 32 * 4:
         #     platform1.shake()
-        state.jump()
 
     # if (x > 32 * 4) and (x < 32 * 4 + 32 * 4) and (y > 568 - 32 * 5) and (y < 568 - 32 * 3) and (state.y > 0):
     #     # platform2.shake()
@@ -128,13 +133,14 @@ while True:
     coordinates['y'] = min(resolution['height'], y + state.y)
 
     display.fill((0, 0, 0))
-    # display.blit(backgroundImage, (0, 0))
+    display.blit(backgroundImage, (0, 0))
 
     top = 200
     offset = top - coordinates['y']
     if offset > 0:
         coordinates['y'] = top
         manager.move_view(offset)
+        topOffset = topOffset + offset
 
     if manager.hit_test(coordinates['x'], coordinates['y'], state.y > 0):
         state.jump()
