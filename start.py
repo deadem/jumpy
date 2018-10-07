@@ -1,5 +1,5 @@
 from input import Input
-from platform import Platform, Vanish, Moving
+from platform import Platform, Vanish, Moving, Monster
 from manager import Manager
 import math
 import pygame
@@ -7,6 +7,9 @@ import random
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
+
+pygame.mixer.music.load('resources/sound/music.mp3')
+pygame.mixer.music.play(-1)
 
 resolution = { 'width': 800, 'height': 900 }
 
@@ -62,7 +65,7 @@ manager = Manager(display)
 
 i = 0
 lastVanish = False
-for m in range(0, 100):
+for m in range(0, 200):
     x = 32 * 4 * 1.2 * i + random.random() * 32 * 2
     y = 568 - 32 * 4 * 1.5 * m
 
@@ -77,6 +80,10 @@ for m in range(0, 100):
         lastVanish = False
 
     manager.add_platform(platform)
+
+    if random.random() < 0.5:
+        manager.add_platform(Monster(0, y - 64, resolution['width']))
+
     if i > 0 and random.random() > 0.5 ** i:
         i = i - 1
     elif i < 5:

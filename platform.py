@@ -1,12 +1,6 @@
 import pygame
 import random
 
-import os
-
-class Type:
-    regular = 1
-    vanish = 2
-
 class Platform:
     width = 32 * 4
     height = 16
@@ -65,7 +59,6 @@ class Vanish(Platform):
         return self.alpha == 255
 
 class Moving(Platform):
-
     def __init__(self, x, y, maxX):
         self.stepLimit = 64 + 100 * random.random()
         self.maxX = maxX
@@ -90,3 +83,22 @@ class Moving(Platform):
             self.steps = 0
 
         super().draw(display)
+
+class Monster(Moving):
+    def __init__(self, x, y, maxX):
+        self.width = 64
+        self.height = 64
+        super().__init__(x, y, maxX)
+        self.stepLimit = maxX * 2
+        self.image = pygame.image.load('resources/img/monster.png')
+        self.sound = pygame.mixer.Sound('resources/sound/monster-hit.wav')
+        self.fall = -1
+
+    def draw(self, display):
+        super().draw(display)
+        if not self.fall == -1:
+            self.y = self.y + 16
+
+    def hit(self):
+        self.fall = 0
+        pygame.mixer.Sound.play(self.sound)
