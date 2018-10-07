@@ -19,17 +19,14 @@ class Manager:
         for gameObject in self.gameObjects:
             gameObject.draw(self.display)
 
-    def hit_test(self, x, y, down) -> bool:
-        if not down:
-            return False
-
+    def hit_test(self, x, y, player) -> bool:
         for gameObject in self.gameObjects:
-            if not gameObject.can_hit(down):
+            if not gameObject.can_hit(player):
                 continue
 
             if x + 32 >= gameObject.x and x <= gameObject.x + gameObject.width:
                 if y + 32 >= gameObject.y and y <= gameObject.y + gameObject.height:
-                    gameObject.hit(down)
+                    gameObject.hit(player)
                     return True
 
         return False

@@ -26,12 +26,12 @@ class Platform:
 
         display.blit(self.image, (self.x, y))
 
-    def hit(self, down: bool):
+    def hit(self, player):
         self.shakeIndex = 0
         pygame.mixer.Sound.play(self.sound)
 
-    def can_hit(self, down: bool) -> bool:
-        return down
+    def can_hit(self, player) -> bool:
+        return player.y > 0
 
 class Vanish(Platform):
     def __init__(self, x, y):
@@ -50,13 +50,13 @@ class Vanish(Platform):
 
         self.image.set_alpha(self.alpha)
 
-    def hit(self, down: bool):
-        super().hit(down)
+    def hit(self, player):
+        super().hit(player)
         self.fade = True
         self.alpha = 254
 
-    def can_hit(self, down: bool) -> bool:
-        return self.alpha == 255 and down
+    def can_hit(self, player) -> bool:
+        return self.alpha == 255 and player.y > 0
 
 class Moving(Platform):
     image = pygame.image.load('resources/img/platform-blue-32.png')

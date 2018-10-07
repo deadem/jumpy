@@ -7,11 +7,14 @@ class Monster:
     height = 64
     alive = True
     sound = False
+    bite = False
     image = pygame.image.load('resources/img/monster.png')
 
     def __init__(self, x, y, maxX):
         if not Monster.sound:
             Monster.sound = pygame.mixer.Sound('resources/sound/monster-hit.wav')
+        if not Monster.bite:
+            Monster.bite = pygame.mixer.Sound('resources/sound/bite.wav')
         self.x = x
         self.y = y
         self.maxX = maxX
@@ -34,9 +37,13 @@ class Monster:
 
         display.blit(self.image, (self.x, self.y))
 
-    def hit(self, down: bool):
-        self.fall = 0
-        pygame.mixer.Sound.play(self.sound)
+    def hit(self, player):
+        if player.y > 0:
+            self.fall = 0
+            pygame.mixer.Sound.play(self.sound)
+        else:
+            player.fall()
+            pygame.mixer.Sound.play(self.bite)
 
-    def can_hit(self, down: bool) -> bool:
+    def can_hit(self, player) -> bool:
         return True

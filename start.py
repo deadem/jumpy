@@ -93,7 +93,7 @@ while True:
         manager.move_view(offset)
         topOffset = topOffset + offset
 
-    if manager.hit_test(coordinates['x'], coordinates['y'], player.y > 0):
+    if player.can_jump() and manager.hit_test(coordinates['x'], coordinates['y'], player):
         player.jump()
     manager.draw()
 
