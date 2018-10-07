@@ -1,5 +1,5 @@
 from input import Input
-from platform import Platform
+from platform import Platform, Vanish
 from manager import Manager
 import math
 import pygame
@@ -14,6 +14,7 @@ pygame.display.set_caption('Bumpy')
 clock = pygame.time.Clock()
 
 bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
+backgroundImage = pygame.image.load('resources/img/background.jpg')
 userInput = Input()
 
 
@@ -41,8 +42,8 @@ class State:
         self.y = min(self.maxY, self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4)
 
     def jump(self):
-        self.lastY = min(-self.y / 2, -20)
-        self.maxY = 20
+        self.lastY = min(-self.y / 2, -22)
+        self.maxY = 22
         self.ticks = pygame.time.get_ticks() / 100
         self.targetX = 0
 
@@ -60,7 +61,13 @@ manager = Manager(display)
 
 i = 0
 for m in range(0, 100):
-    manager.add_platform(32 * 4 * i, 568 - 32 * 4 * 1.5 * m)
+    x = 32 * 4 * 1.2 * i + random.random() * 32 * 2
+    y = 568 - 32 * 4 * 1.5 * m
+    if random.random() < 0.3:
+        platform = Vanish(x, y)
+    else:
+        platform = Platform(x, y)
+    manager.add_platform(platform)
     if i > 0 and random.random() > 0.5 ** i:
         i = i - 1
     elif i < 5:
@@ -72,11 +79,12 @@ for m in range(0, 100):
 
 p = 0
 
-quit = False
-while not quit:
+while True:
     for event in pygame.event.get():
-        quit = quit | event.type == pygame.QUIT
         print(event)
+
+        if event.type == pygame.QUIT:
+            quit()
 
         userInput.event(event)
 
@@ -111,8 +119,9 @@ while not quit:
     coordinates['y'] = min(600, y + state.y)
 
     display.fill((0, 0, 0))
+    # display.blit(backgroundImage, (0, 0))
 
-    top = 100
+    top = 200
     offset = top - coordinates['y']
     if offset > 0:
         coordinates['y'] = top
