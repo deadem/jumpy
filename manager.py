@@ -12,6 +12,9 @@ class Manager:
     def add_gameObject(self, gameObject):
         self.gameObjects.append(gameObject)
 
+    def tick(self):
+        self.gameObjects = list(filter(lambda obj: obj.alive, self.gameObjects))
+
     def draw(self):
         for gameObject in self.gameObjects:
             gameObject.draw(self.display)

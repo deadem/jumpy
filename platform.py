@@ -4,7 +4,7 @@ import random
 class Platform:
     width = 32 * 4
     height = 16
-
+    alive = True
     image = pygame.image.load('resources/img/platform-32.png')
     sound = False
     shakeCoords = [10, -10, -5, 8, -3, 5, -2, 5, 1, -1, 0]
@@ -34,10 +34,9 @@ class Platform:
         return down
 
 class Vanish(Platform):
-    image = pygame.image.load('resources/img/platform-white-32.png')
-
     def __init__(self, x, y):
         self.sound = pygame.mixer.Sound('resources/sound/jump3.wav')
+        self.image = pygame.image.load('resources/img/platform-white-32.png')
         self.alpha = 255
         self.fade = True
         super().__init__(x, y)

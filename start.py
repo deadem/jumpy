@@ -162,5 +162,6 @@ while True:
 
     pygame.display.update()
     clock.tick(60) # FPS
+    manager.tick()
 
 pygame.quit()
