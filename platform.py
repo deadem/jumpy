@@ -1,4 +1,5 @@
 import pygame
+import random
 
 class Type:
     regular = 1
@@ -56,3 +57,28 @@ class Vanish(Platform):
     def can_hit(self):
         return self.alpha == 255
 
+class Moving(Platform):
+
+    def __init__(self, x, y, maxX):
+        self.stepLimit = 64 + 100 * random.random()
+        self.maxX = maxX
+        self.steps = self.stepLimit / 2
+        self.offset = 2 + random.random() * 8
+
+        self.image = pygame.image.load('resources/img/platform-blue-32.png')
+        super().__init__(x, y)
+
+    def draw(self, display):
+        self.x = self.x + self.offset
+        self.steps = self.steps + 1
+        if self.x < 0:
+            self.offset = abs(self.offset)
+            self.steps = 0
+        elif self.x + self.width > self.maxX:
+            self.offset = -abs(self.offset)
+            self.steps = 0
+        elif self.steps > self.stepLimit:
+            self.offset = self.offset * -1
+            self.steps = 0
+
+        super().draw(display)

@@ -1,5 +1,5 @@
 from input import Input
-from platform import Platform, Vanish
+from platform import Platform, Vanish, Moving
 from manager import Manager
 import math
 import pygame
@@ -7,7 +7,7 @@ import random
 
 pygame.init()
 
-resolution = { 'width': 800, 'height': 600 }
+resolution = { 'width': 800, 'height': 900 }
 
 display = pygame.display.set_mode((resolution['width'],resolution['height']))
 pygame.display.set_caption('Bumpy')
@@ -42,8 +42,8 @@ class State:
         self.y = min(self.maxY, self.lastY + (9.8 * (self.ticks - ticks) ** 2) / 4)
 
     def jump(self):
-        self.lastY = min(-self.y / 2, -22)
-        self.maxY = 22
+        self.lastY = min(-self.y / 2, -25)
+        self.maxY = 25
         self.ticks = pygame.time.get_ticks() / 100
         self.targetX = 0
 
@@ -60,13 +60,21 @@ coordinates = { 'x': 0, 'y': 0 }
 manager = Manager(display)
 
 i = 0
+lastVanish = False
 for m in range(0, 100):
     x = 32 * 4 * 1.2 * i + random.random() * 32 * 2
     y = 568 - 32 * 4 * 1.5 * m
-    if random.random() < 0.3:
+
+    if random.random() < 0.3 and lastVanish == False:
+        platform = Moving(x, y, resolution['width'])
+        lastVanish = False
+    elif random.random() < 0.3:
+        lastVanish = True
         platform = Vanish(x, y)
     else:
         platform = Platform(x, y)
+        lastVanish = False
+
     manager.add_platform(platform)
     if i > 0 and random.random() > 0.5 ** i:
         i = i - 1
@@ -103,7 +111,7 @@ while True:
     x = coordinates['x']
     y = coordinates['y']
 
-    if y >= 600:
+    if y >= resolution['height']:
         # if x >= 0 and x <= 32 * 4:
         #     platform1.shake()
         state.jump()
@@ -116,7 +124,7 @@ while True:
     state.updateX()
 
     coordinates['x'] = state.x
-    coordinates['y'] = min(600, y + state.y)
+    coordinates['y'] = min(resolution['height'], y + state.y)
 
     display.fill((0, 0, 0))
     # display.blit(backgroundImage, (0, 0))
