@@ -2,30 +2,31 @@ from platform import Platform
 
 class Manager:
     def __init__(self, display):
-        self.platforms = []
+        self.gameObjects = []
         self.display = display
 
     def move_view(self, offset):
-        for platform in self.platforms:
-            platform.y = platform.y + offset
+        for gameObject in self.gameObjects:
+            gameObject.y = gameObject.y + offset
 
-    def add_platform(self, platform: Platform):
-        self.platforms.append(platform)
+    def add_gameObject(self, gameObject):
+        self.gameObjects.append(gameObject)
 
     def draw(self):
-        for platform in self.platforms:
-            platform.draw(self.display)
+        for gameObject in self.gameObjects:
+            gameObject.draw(self.display)
 
     def hit_test(self, x, y, down) -> bool:
         if not down:
             return False
 
-        for platform in self.platforms:
-            if not platform.can_hit():
+        for gameObject in self.gameObjects:
+            if not gameObject.can_hit(down):
                 continue
-            if x + 32 >= platform.x and x <= platform.x + platform.width:
-                if y + 32 >= platform.y and y <= platform.y + platform.height:
-                    platform.hit()
+
+            if x + 32 >= gameObject.x and x <= gameObject.x + gameObject.width:
+                if y + 32 >= gameObject.y and y <= gameObject.y + gameObject.height:
+                    gameObject.hit(down)
                     return True
 
         return False

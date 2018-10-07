@@ -1,5 +1,6 @@
 from input import Input
-from platform import Platform, Vanish, Moving, Monster
+from platform import Platform, Vanish, Moving
+from monster import Monster
 from manager import Manager
 import math
 import pygame
@@ -79,10 +80,10 @@ for m in range(0, 200):
         platform = Platform(x, y)
         lastVanish = False
 
-    manager.add_platform(platform)
+    manager.add_gameObject(platform)
 
     if random.random() < 0.5:
-        manager.add_platform(Monster(0, y - 64, resolution['width']))
+        manager.add_gameObject(Monster(0, y - 64, resolution['width']))
 
     if i > 0 and random.random() > 0.5 ** i:
         i = i - 1
