@@ -1,7 +1,9 @@
 import pygame
-
+from screen import Screen
 
 class Player:
+    width = 32
+    height = 32
     x = 0
     y = 0
     ticks = 0
@@ -13,6 +15,7 @@ class Player:
 
     def move_x(self, value):
         self.x = self.x + value * 10
+        self.x = max(0, min(Screen.width - Player.width, self.x))
 
     def jump(self):
         self.lastY = min(-self.y / 2, -25)

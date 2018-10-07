@@ -1,6 +1,6 @@
 import pygame
 import random
-
+from screen import Screen
 
 class Monster:
     width = 64
@@ -10,19 +10,18 @@ class Monster:
     bite = False
     image = pygame.image.load('resources/img/monster.png')
 
-    def __init__(self, x, y, maxX):
+    def __init__(self, x, y):
         if not Monster.sound:
             Monster.sound = pygame.mixer.Sound('resources/sound/monster-hit.wav')
         if not Monster.bite:
             Monster.bite = pygame.mixer.Sound('resources/sound/bite.wav')
         self.x = x
         self.y = y
-        self.maxX = maxX
         self.offset = 2 + random.random() * 8
         self.fall = -1
 
     def draw(self, display):
-        if self.x + self.width >= self.maxX:
+        if self.x + self.width >= Screen.width:
             self.offset = -abs(self.offset)
         if self.x <= 0:
             self.offset = abs(self.offset)

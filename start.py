@@ -3,6 +3,7 @@ from platform import Platform, Vanish, Moving
 from monster import Monster
 from manager import Manager
 from player import Player
+from screen import Screen
 import math
 import pygame
 import random
@@ -13,9 +14,7 @@ pygame.init()
 pygame.mixer.music.load('resources/sound/music.mp3')
 pygame.mixer.music.play(-1)
 
-resolution = { 'width': 800, 'height': 900 }
-
-display = pygame.display.set_mode((resolution['width'],resolution['height']))
+display = pygame.display.set_mode((Screen.width, Screen.height))
 pygame.display.set_caption('Bumpy')
 clock = pygame.time.Clock()
 
@@ -32,7 +31,7 @@ for m in range(0, 200):
     y = 568 - 32 * 4 * 1.5 * m
 
     if random.random() < 0.3 and lastVanish == False:
-        platform = Moving(x, y, resolution['width'])
+        platform = Moving(x, y)
         lastVanish = False
     elif random.random() < 0.3:
         lastVanish = True
@@ -44,7 +43,7 @@ for m in range(0, 200):
     manager.add_gameObject(platform)
 
     if random.random() < 0.5:
-        manager.add_gameObject(Monster(0, y - 64, resolution['width']))
+        manager.add_gameObject(Monster(0, y - 64))
 
     if i > 0 and random.random() > 0.5 ** i:
         i = i - 1
@@ -70,7 +69,7 @@ while True:
     x = coordinates['x']
     y = coordinates['y']
 
-    if y >= resolution['height'] - 64:
+    if y >= Screen.height - 64:
         offset = -40
         if topOffset <= -offset:
             player.jump()
@@ -81,7 +80,7 @@ while True:
     player.tick()
 
     coordinates['x'] = player.x
-    coordinates['y'] = min(resolution['height'], y + player.y)
+    coordinates['y'] = min(Screen.height, y + player.y)
 
     display.fill((0, 0, 0))
     display.blit(backgroundImage, (0, 0))

@@ -1,5 +1,6 @@
 import pygame
 import random
+from screen import Screen
 
 class Platform:
     width = 32 * 4
@@ -61,9 +62,8 @@ class Vanish(Platform):
 class Moving(Platform):
     image = pygame.image.load('resources/img/platform-blue-32.png')
 
-    def __init__(self, x, y, maxX):
+    def __init__(self, x, y):
         self.stepLimit = 64 + 100 * random.random()
-        self.maxX = maxX
         self.steps = self.stepLimit / 2
         self.offset = 2 + random.random() * 8
 
@@ -76,7 +76,7 @@ class Moving(Platform):
         if self.x < 0:
             self.offset = abs(self.offset)
             self.steps = 0
-        elif self.x + self.width > self.maxX:
+        elif self.x + self.width > Screen.width:
             self.offset = -abs(self.offset)
             self.steps = 0
         elif self.steps > self.stepLimit:
