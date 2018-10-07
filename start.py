@@ -5,6 +5,7 @@ import math
 import pygame
 import random
 
+pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.init()
 
 resolution = { 'width': 800, 'height': 900 }

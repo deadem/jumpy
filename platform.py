@@ -1,6 +1,8 @@
 import pygame
 import random
 
+import os
+
 class Type:
     regular = 1
     vanish = 2
@@ -10,12 +12,15 @@ class Platform:
     height = 16
 
     image = pygame.image.load('resources/img/platform-32.png')
+    sound = False
     shakeCoords = [10, -10, -5, 8, -3, 5, -2, 5, 1, -1, 0]
 
     def __init__(self, x, y):
         self.x = x
         self.y = y
         self.shakeIndex = -1
+        if not Platform.sound:
+            Platform.sound = pygame.mixer.Sound('resources/sound/jump1.wav')
 
     def draw(self, display):
         y = self.y
@@ -29,6 +34,7 @@ class Platform:
 
     def hit(self):
         self.shakeIndex = 0
+        pygame.mixer.Sound.play(self.sound)
 
     def can_hit(self):
         return True
@@ -36,6 +42,7 @@ class Platform:
 class Vanish(Platform):
     def __init__(self, x, y):
         self.image = pygame.image.load('resources/img/platform-white-32.png')
+        self.sound = pygame.mixer.Sound('resources/sound/jump3.wav')
         self.alpha = 255
         self.fade = True
         super().__init__(x, y)
@@ -66,6 +73,7 @@ class Moving(Platform):
         self.offset = 2 + random.random() * 8
 
         self.image = pygame.image.load('resources/img/platform-blue-32.png')
+        self.sound = pygame.mixer.Sound('resources/sound/jump2.wav')
         super().__init__(x, y)
 
     def draw(self, display):
