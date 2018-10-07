@@ -17,6 +17,8 @@ pygame.mixer.music.play(-1)
 display = pygame.display.set_mode((Screen.width, Screen.height))
 pygame.display.set_caption('Bumpy')
 clock = pygame.time.Clock()
+font = pygame.font.SysFont("arial", 48)
+
 
 bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
 backgroundImage = pygame.image.load('resources/img/background.jpg')
@@ -42,7 +44,7 @@ for m in range(0, 200):
 
     manager.add_gameObject(platform)
 
-    if random.random() < 0.5:
+    if random.random() < min(0.5, i * 0.01):
         manager.add_gameObject(Monster(0, y - 64))
 
     if i > 0 and random.random() > 0.5 ** i:
@@ -97,6 +99,9 @@ while True:
     manager.draw()
 
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
+
+    text = font.render("height: %s" % int(topOffset / 10), True, (128, 128, 128))
+    display.blit(text, (Screen.width - text.get_width(), 0))
 
     pygame.display.update()
     clock.tick(60) # FPS
