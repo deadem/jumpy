@@ -24,7 +24,6 @@ bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
 backgroundImage = pygame.image.load('resources/img/background.jpg')
 userInput = Input()
 
-
 manager = Manager(display)
 i = 0
 lastVanish = False
@@ -75,6 +74,9 @@ while True:
 
     x = coordinates['x']
     y = coordinates['y']
+
+    if abs(userInput.get_axis(3)) > 0.3 or abs(userInput.get_axis(4)) > 0.3:
+        manager.add_bullet(x, y, userInput.get_axis(4), userInput.get_axis(3))
 
     if y >= Screen.height - 64:
         offset = -40

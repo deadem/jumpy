@@ -5,6 +5,7 @@ from screen import Screen
 class Platform:
     width = 32 * 4
     height = 16
+    killable = False
     alive = True
     image = pygame.image.load('resources/img/platform-32.png')
     sound = False

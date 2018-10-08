@@ -30,8 +30,6 @@ class Input:
             self.set_state(Direction.x, 0)
 
     def move_axis(self, num, value):
-        if abs(value) < 0.3:
-            value = 0
         self.axis[num] = value
 
     def move_keys(self, event):

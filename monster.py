@@ -5,6 +5,7 @@ from screen import Screen
 class Monster:
     width = 64
     height = 64
+    killable = True
     alive = True
     sound = False
     bite = False
@@ -38,11 +39,14 @@ class Monster:
 
     def hit(self, player):
         if player.y > 0:
-            self.fall = 0
-            pygame.mixer.Sound.play(self.sound)
+            self.die()
         else:
             player.fall()
             pygame.mixer.Sound.play(self.bite)
 
     def can_hit(self, player) -> bool:
         return True
+
+    def die(self):
+        self.fall = 0
+        pygame.mixer.Sound.play(self.sound)
