@@ -1,5 +1,5 @@
 from input import Input
-from platform import Platform, Vanish, Moving
+from platform import Platform, Vanish, Moving, Spikes
 from monster import Monster
 from manager import Manager
 from player import Player
@@ -17,7 +17,7 @@ pygame.mixer.music.play(-1)
 display = pygame.display.set_mode((Screen.width, Screen.height))
 pygame.display.set_caption('Bumpy')
 clock = pygame.time.Clock()
-font = pygame.font.SysFont("arial", 48)
+font = pygame.font.SysFont("comicsansms", 48)
 
 
 bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
@@ -28,11 +28,16 @@ userInput = Input()
 manager = Manager(display)
 i = 0
 lastVanish = False
-for m in range(0, 200):
+for m in range(0, 100):
     x = 32 * 4 * 1.2 * i + random.random() * 32 * 2
     y = 568 - 32 * 4 * 1.5 * m
 
-    if random.random() < 0.3 and lastVanish == False:
+    if False:
+        pass
+    elif random.random() < 0.1:
+        platform = Spikes(x, y)
+        lastVanish = True
+    elif random.random() < 0.3 and lastVanish == False:
         platform = Moving(x, y)
         lastVanish = False
     elif random.random() < 0.3:
@@ -44,7 +49,7 @@ for m in range(0, 200):
 
     manager.add_gameObject(platform)
 
-    if random.random() < min(0.5, i * 0.01):
+    if random.random() < min(0.5, i * 0.1):
         manager.add_gameObject(Monster(0, y - 64))
 
     if i > 0 and random.random() > 0.5 ** i:
@@ -100,7 +105,7 @@ while True:
 
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
 
-    text = font.render("height: %s" % int(topOffset / 10), True, (128, 128, 128))
+    text = font.render("%s" % int(topOffset / 10), True, (128, 128, 128))
     display.blit(text, (Screen.width - text.get_width(), 0))
 
     pygame.display.update()

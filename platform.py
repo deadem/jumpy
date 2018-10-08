@@ -84,3 +84,22 @@ class Moving(Platform):
             self.steps = 0
 
         super().draw(display)
+
+class Spikes(Platform):
+    image = pygame.image.load('resources/img/platform-spikes-32.png')
+    bite = False
+
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        if not Spikes.bite:
+            Spikes.bite = pygame.mixer.Sound('resources/sound/spike-hit.wav')
+
+    def hit(self, player):
+        if player.y > 0:
+            super().hit(player)
+        else:
+            player.fall()
+            pygame.mixer.Sound.play(self.bite)
+
+    def can_hit(self, player) -> bool:
+        return True
