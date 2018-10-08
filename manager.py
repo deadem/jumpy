@@ -36,6 +36,8 @@ class Bullet:
             self.alive = False
 
     def can_hit(self, gameObject):
+        if not gameObject.fall or gameObject.fall >= 0:
+            return False
         if self.x + self.width < gameObject.x:
             return False
         if self.x > gameObject.x + gameObject.width:
@@ -86,13 +88,14 @@ class Manager:
             if gameObject.killable:
                 for bullet in self.bullets:
                     if bullet.can_hit(gameObject):
+                        player.add_score(100)
                         bullet.hit(gameObject)
 
             if not gameObject.can_hit(player):
                 continue
 
-            if x + 32 >= gameObject.x and x <= gameObject.x + gameObject.width:
-                if y + 32 >= gameObject.y and y <= gameObject.y + gameObject.height:
+            if x + player.width >= gameObject.x and x <= gameObject.x + gameObject.width:
+                if y + player.height >= gameObject.y and y <= gameObject.y + gameObject.height:
                     gameObject.hit(player)
                     return True
 

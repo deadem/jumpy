@@ -11,6 +11,7 @@ class Player:
     jumpY = 25
     canJump = True
     fallDown = 0
+    score = 0
 
 
     def move_x(self, value):
@@ -33,4 +34,7 @@ class Player:
     def fall(self):
         self.fallDown = pygame.time.get_ticks() + 1000
         self.canJump = False
+
+    def add_score(self, score):
+        self.score = self.score + score
 

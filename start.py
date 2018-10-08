@@ -24,10 +24,14 @@ bumpyImage = pygame.image.load('resources/img/bumpy-32.png')
 backgroundImage = pygame.image.load('resources/img/background.jpg')
 userInput = Input()
 
+score = 0
+startlevel = pygame.time.get_ticks()
+
 manager = Manager(display)
 i = 0
+total = 100
 lastVanish = False
-for m in range(0, 100):
+for m in range(0, total):
     x = 32 * 4 * 1.2 * i + random.random() * 32 * 2
     y = 568 - 32 * 4 * 1.5 * m
 
@@ -45,6 +49,9 @@ for m in range(0, 100):
     else:
         platform = Platform(x, y)
         lastVanish = False
+
+    if i == total:
+        platform = Platform(x, y)
 
     manager.add_gameObject(platform)
 
@@ -79,8 +86,9 @@ while True:
         manager.add_bullet(x, y, userInput.get_axis(4), userInput.get_axis(3))
 
     if y >= Screen.height - 64:
-        offset = -40
+        offset = -64
         if topOffset <= -offset:
+            startlevel = pygame.time.get_ticks()
             player.jump()
         else:
             topOffset = topOffset + offset
@@ -106,8 +114,9 @@ while True:
     manager.draw()
 
     display.blit(bumpyImage, (coordinates['x'], coordinates['y']))
+    ticks = pygame.time.get_ticks() - startlevel
 
-    text = font.render("%s" % int(topOffset / 10), True, (128, 128, 128))
+    text = font.render("%s" % int(topOffset / 10 - ticks / 100 + player.score), True, (128, 128, 128))
     display.blit(text, (Screen.width - text.get_width(), 0))
 
     pygame.display.update()

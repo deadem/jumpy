@@ -39,6 +39,7 @@ class Monster:
 
     def hit(self, player):
         if player.y > 0:
+            player.add_score(100)
             self.die()
         else:
             player.fall()
